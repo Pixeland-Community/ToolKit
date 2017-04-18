@@ -1,15 +1,44 @@
-# I really don't know CMake so I don't know if this is a good idea to use. 
-cmake_minimum_required(VERSION 2.6)
-project(toolkit)
+cmake_minimum_required(VERSION 2.8)
 
-# set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PixelandToolkit_SOURCE_DIR}/cmake")
-set(BIN_DIR ${PixelandToolkit_SOURCE_DIR}/bin)
+project(Pixeland-Toolkit)
 
-set(GL_INCLUDE_PATH /usr/include/GL)
-set(SDL2_INCLUDE_DIR /usr/include/SDL2)
-set(GL_LIBRARY /usr/lib/i386-linux-gnu/libGLU.so)
-set(SDL2_LIBRARY /usr/lib/i386-linux-gnu/libSDL2-2.0.so)
 
-include_directories(${GL_INCLUDE_PATH} ${SDL2_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/glfw/include)
 
-add_subdirectory(toolkit)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(glfw)
+
+
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
+
+file(GLOB_RECURSE SRC
+    "src/*.cpp"
+    "src/*.h"
+    "src/*.hpp"
+)
+
+
+
+add_executable(${PROJECT_NAME} ${SRC})
+target_link_libraries(${PROJECT_NAME} GL glfw)
+
+
+
+# Enable C++ 11
+if (NOT UNIX)
+	set_target_properties(${PROJECT_NAME} PROPERTIES
+	    CXX_STANDARD 11
+	    CXX_STANDARD_REQUIRED ON
+	    CXX_EXTENSIONS OFF
+	)
+else()
+	add_definitions(-std=c++11)
+endif()

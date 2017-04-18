@@ -325,3 +325,5 @@ __pycache__/
 # !tools/packages.config
 
 RESOURCES/
+
+*.dot
